@@ -1,0 +1,27 @@
+{
+  "eval_id": "capital_test",
+  "model": "gpt-4o-mini",
+  "ts": "2025-05-03T23:04:28",
+  "elapsed_s": 1.618,
+  "token_usage": 43,
+  "results": [
+    {
+      "input": {
+        "country": "France"
+      },
+      "output": "The capital of France is Paris."
+    },
+    {
+      "input": {
+        "country": "Japan"
+      },
+      "output": "The capital of Japan is Tokyo."
+    },
+    {
+      "input": {
+        "country": "Brazil"
+      },
+      "output": "The capital of Brazil is Bras\u00edlia."
+    }
+  ]
+}
