@@ -234,7 +234,7 @@ def run_first_eval():
     if OXEN_AVAILABLE:
         console.print("[dim]Committing to Oxen...[/dim]")
         try:
-            oxen_bin = "/nix/store/oxen/bin/oxen"
+            oxen_bin = "oxen"  # Use PATH-based oxen from Nix
             subprocess.run([oxen_bin, "add", str(json_fp)], check=True)
             subprocess.run([oxen_bin, "commit", "-m", f"run {eval_id}", "-b", eval_id], check=True)
             subprocess.run([oxen_bin, "add", str(md_fp)], check=True) 
