@@ -234,8 +234,11 @@ def run_first_eval():
     if OXEN_AVAILABLE:
         console.print("[dim]Committing to Oxen...[/dim]")
         try:
-            _oxen_add_commit(json_fp, f"run {eval_id}", eval_id)
-            _oxen_add_commit(md_fp, f"log {eval_id}", eval_id)
+            oxen_bin = "/nix/store/oxen/bin/oxen"
+            subprocess.run([oxen_bin, "add", str(json_fp)], check=True)
+            subprocess.run([oxen_bin, "commit", "-m", f"run {eval_id}", "-b", eval_id], check=True)
+            subprocess.run([oxen_bin, "add", str(md_fp)], check=True) 
+            subprocess.run([oxen_bin, "commit", "-m", f"log {eval_id}", "-b", eval_id], check=True)
             console.print("[green]✓ Committed to Oxen successfully[/green]")
         except Exception as e:
             console.print(f"[yellow]Warning: Failed to commit to Oxen: {e}[/yellow]")
