@@ -77,6 +77,33 @@ def _ask(prompt: str) -> str:
 def _tok(text: str) -> int:
     return len(enc.encode(text))
 
+def _write_markdown(payload: Dict[str, Any], json_path: Path) -> Path:
+    """Write evaluation results as a markdown file."""
+    md_path = json_path.with_suffix('.md')
+    
+    lines = [
+        f"# Evaluation: {payload['eval_id']}",
+        f"\nTimestamp: {payload['ts']}",
+        f"\nModel: {payload['model']}",
+        f"\nTotal tokens: {payload['token_usage']}",
+        f"\nElapsed time: {payload['elapsed_s']} seconds",
+        "\n## Results\n"
+    ]
+    
+    for i, r in enumerate(payload['results'], 1):
+        lines.extend([
+            f"\n### Input {i}",
+            "```json",
+            json.dumps(r['input'], indent=2),
+            "```",
+            "\n**Response:**",
+            f"\n{r['output']}\n",
+            f"\nTokens: {r['total_tokens']} ({r['input_tokens']} input + {r['output_tokens']} output)"
+        ])
+    
+    md_path.write_text('\n'.join(lines))
+    return md_path
+
 def _display_results(payload: Dict[str, Any]) -> None:
     """Display evaluation results in the console using rich formatting."""
     console.print(Panel(f"[bold blue]Eval `{payload['eval_id']}` — {payload['ts']}[/bold blue]"))
