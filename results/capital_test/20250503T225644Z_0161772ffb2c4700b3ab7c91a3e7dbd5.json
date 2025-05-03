@@ -1,0 +1,37 @@
+{
+  "eval_id": "capital_test",
+  "model": "gpt-4o-mini",
+  "ts": "2025-05-03T22:56:44",
+  "elapsed_s": 2.247,
+  "token_usage": 73,
+  "prompt_template": "What is the capital of {country}?",
+  "results": [
+    {
+      "input": {
+        "country": "France"
+      },
+      "output": "The capital of France is Paris.",
+      "input_tokens": 7,
+      "output_tokens": 7,
+      "total_tokens": 14
+    },
+    {
+      "input": {
+        "country": "Japan"
+      },
+      "output": "The capital of Japan is Tokyo.",
+      "input_tokens": 7,
+      "output_tokens": 7,
+      "total_tokens": 14
+    },
+    {
+      "input": {
+        "country": "Brazil"
+      },
+      "output": "The capital of Brazil is Bras\u00edlia. It was officially inaugurated as the capital on April 21, 1960, and is known for its modernist architecture and unique urban planning.",
+      "input_tokens": 7,
+      "output_tokens": 38,
+      "total_tokens": 45
+    }
+  ]
+}
