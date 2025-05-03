@@ -78,6 +78,11 @@ def _ask(prompt: str) -> str:
 def _tok(text: str) -> int:
     return len(enc.encode(text))
 
+def _oxen_add_commit(file_path: Path, msg: str, branch: str) -> None:
+    """Add and commit a file to Oxen."""
+    subprocess.run(["oxen", "add", str(file_path)], check=True)
+    subprocess.run(["oxen", "commit", "-m", msg, "-b", branch], check=True)
+
 def _write_markdown(payload: Dict[str, Any], json_path: Path) -> Path:
     """Write evaluation results as a markdown file."""
     md_path = json_path.with_suffix('.md')
