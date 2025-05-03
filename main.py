@@ -40,6 +40,7 @@ OXEN_DIR = ROOT / ".oxen"
 # ───────────────────────── Secrets / API keys ────────────────────
 OPENAI_KEY = os.getenv("OPENAI_API_KEY")
 OXEN_TOKEN = os.getenv("OXEN_API_KEY")  # optional, used by oxen CLI if configured
+OXEN_AVAILABLE = os.getenv("OXEN_AVAILABLE", "").lower() == "true"
 
 if not OPENAI_KEY:
     console.print("[red]OPENAI_API_KEY missing – set it in Replit secrets.[/]")
