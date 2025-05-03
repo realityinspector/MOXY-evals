@@ -1,7 +1,46 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
 [project]
-name = "python-template"
+name = "moxy-server"
 version = "0.1.0"
-description = ""
-authors = ["Your Name <you@example.com>"]
-requires-python = ">=3.11"
-dependencies = []
+description = "MOXY: microscope × oxen × YAML LLM evaluation server"
+readme = "README.md"
+authors = [ {name = "MOXY Team", email = "moxy@local"} ]
+license = {text = "Apache-2.0"}
+requires-python = ">=3.10"
+
+# core runtime deps
+dependencies = [
+  "fastapi>=0.111",
+  "uvicorn[standard]>=0.29",
+  "pyyaml>=6.0",
+  "mirascope[openai]>=1.22.6",
+  "rich>=13.7",
+  "tiktoken>=0.6",
+]
+
+[project.optional-dependencies]
+# dev / test extras
+dev = [
+  "black>=24.3",
+  "ruff>=0.4",
+  "pytest>=8.2",
+  "mypy>=1.10",
+]
+
+docs = ["mkdocs-material>=9.5"]
+
+[project.scripts]
+# simple CLI entry to launch the server
+moxy-server = "moxy_server:app"
+
+[tool.black]
+line-length = 100
+
+[tool.ruff]
+line-length = 100
+
+[tool.mypy]
+ignore_missing_imports = true

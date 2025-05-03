@@ -1,0 +1,85 @@
+Thought for 11 seconds
+
+
+## The failure means the **`oxen` CLI binary isn’t on `$PATH`**
+
+MOXY prints that notice and switches to “stateless” mode whenever it can’t execute the command `oxen`. To restore the version‑control features you just need the Oxen CLI. Below are the three fastest ways, taken straight from the Oxen docs and release page.
+
+---
+
+\### 1. Homebrew (macOS & Linux that use Homebrew)
+
+```bash
+brew tap Oxen-AI/oxen      # adds the Oxen formula
+brew install oxen          # installs the latest CLI binary
+oxen --version             # sanity‑check
+```
+
+Homebrew pulls the pre‑built binary published with every GitHub release. ([Oxen][1])
+
+---
+
+\### 2. Download the pre‑built release asset (all OSes)
+
+1. Open the **GitHub releases** page: [https://github.com/Oxen-AI/Oxen/releases](https://github.com/Oxen-AI/Oxen/releases)
+   (every tag contains `oxen‑<version>-<platform>.tar.gz`). ([GitHub][2])
+2. Grab the file that matches your OS/arch, e.g. `oxen‑v0.33.2‑x86_64-unknown-linux-gnu.tar.gz`.
+3. Unpack and move the binary somewhere on `PATH`, e.g.:
+
+```bash
+tar -xzf oxen-v0.33.2-*.tar.gz
+sudo mv oxen /usr/local/bin/
+```
+
+4. Verify: `oxen --help`.
+
+The releases are built by CI, so no Rust toolchain is required. ([GitHub][3])
+
+---
+
+\### 3. Build from source (needs Rust ≥ 1.76)
+
+```bash
+git clone https://github.com/Oxen-AI/Oxen.git
+cd Oxen
+cargo build --release              # ~2‑4 min on a modern machine
+export PATH="$PATH:$(pwd)/target/release"
+oxen --version
+```
+
+The README and `install-ubuntu.sh` show the exact build steps and any platform‑specific flags. ([GitHub][2], [GitHub][4])
+
+---
+
+## After installing the CLI
+
+1. **Restart MOXY** (or just reload the process).
+   The startup banner should *no longer* show “oxen CLI not found”.
+2. (Optional) set a remote:
+
+```bash
+export OXEN_REMOTE=https://hub.oxen.ai/my_namespace/my_repo
+```
+
+MOXY will now commit every run to the branch named after the `eval_id` and push automatically. ([Oxen][5])
+
+---
+
+### Quick sanity‑check inside MOXY’s working directory
+
+```bash
+oxen status       # should report a repo at ./ .oxen
+oxen log -n1      # see the latest commit
+```
+
+If those commands work but MOXY still prints the warning, the binary isn’t on the PATH visible to the running process—double‑check the PATH in whatever environment/systemd unit/Dockerfile you use to start MOXY.
+
+---
+
+**Key point:** the code is fine; only the executable named `oxen` was missing. Installing it (via Homebrew, download, or cargo) resolves the message and re‑enables automatic data‑versioning.
+
+[1]: https://docs.oxen.ai/getting-started/install?utm_source=chatgpt.com "Installation - Oxen.ai"
+[2]: https://github.com/Oxen-AI/Oxen?utm_source=chatgpt.com "Oxen.ai's core rust library, server, and CLI - GitHub"
+[3]: https://github.com/Oxen-AI/oxen-release?utm_source=chatgpt.com "Oxen-AI/oxen-release: Lightning fast data version control ... - GitHub"
+[4]: https://github.com/Oxen-AI/Oxen/blob/main/install-ubuntu.sh?utm_source=chatgpt.com "Oxen/install-ubuntu.sh at main - GitHub"
+[5]: https://docs.oxen.ai/getting-started/oxen-server?utm_source=chatgpt.com "Oxen Server - Oxen.ai"
