@@ -14,19 +14,3 @@ requiredFiles = [".replit", "replit.nix"]
 [deployment]
 run = ["python3", "main.py"]
 deploymentTarget = "cloudrun"
-
-[workflows]
-runButton = "Run Server"
-
-[[workflows.workflow]]
-name = "Run Server"
-author = 42064034
-mode = "sequential"
-
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "uvicorn main:app --host 0.0.0.0 --port 8000"
-
-[[ports]]
-localPort = 8000
-externalPort = 80
