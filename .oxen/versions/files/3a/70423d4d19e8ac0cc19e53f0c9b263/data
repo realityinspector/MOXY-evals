@@ -1,0 +1,41 @@
+# capital_test
+
+*time*: 2025-05-03T23:57:13
+
+*model*: gpt-4o-mini
+
+*tokens*: 74
+
+*elapsed*: 1.877 s
+
+## Results
+
+### 1
+
+`input`: `{"country": "France"}`
+
+
+> The capital of France is Paris.
+
+
+*tokens*: 7+7=14
+
+### 2
+
+`input`: `{"country": "Japan"}`
+
+
+> The capital of Japan is Tokyo.
+
+
+*tokens*: 7+7=14
+
+### 3
+
+`input`: `{"country": "Brazil"}`
+
+
+> The capital of Brazil is Brasília. It officially became the capital in 1960, when it was inaugurated as part of a plan to promote the development of the interior of the country.
+
+
+*tokens*: 7+39=46

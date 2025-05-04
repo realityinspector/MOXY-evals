@@ -1,0 +1,41 @@
+# capital_test
+
+*time*: 2025-05-03T23:22:59
+
+*model*: gpt-4o-mini
+
+*tokens*: 43
+
+*elapsed*: 2.72 s
+
+## Results
+
+### 1
+
+`input`: `{"country": "France"}`
+
+
+> The capital of France is Paris.
+
+
+*tokens*: 7+7=14
+
+### 2
+
+`input`: `{"country": "Japan"}`
+
+
+> The capital of Japan is Tokyo.
+
+
+*tokens*: 7+7=14
+
+### 3
+
+`input`: `{"country": "Brazil"}`
+
+
+> The capital of Brazil is Brasília.
+
+
+*tokens*: 7+8=15
