@@ -1,0 +1,6 @@
+capital_test:
+  inputs:
+  - country: France
+  - country: Japan
+  - country: Brazil
+  prompt: What is the capital of {country}?

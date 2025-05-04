@@ -1,0 +1,11 @@
+remote_name = "origin"
+min_version = "0.25.0"
+
+[[remotes]]
+name = "origin"
+url = "https://hub.oxen.ai/realityinspector/testmoxy"
+
+[storage]
+type = "local"
+
+[storage.settings]

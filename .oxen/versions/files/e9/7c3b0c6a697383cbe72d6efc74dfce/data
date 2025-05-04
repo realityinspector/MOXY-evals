@@ -1,0 +1,37 @@
+{
+  "eval_id": "capital_test",
+  "model": "gpt-4o-mini",
+  "ts": "2025-05-03T23:21:33",
+  "elapsed_s": 2.102,
+  "token_usage": 43,
+  "prompt_template": "What is the capital of {country}?",
+  "results": [
+    {
+      "input": {
+        "country": "France"
+      },
+      "output": "The capital of France is Paris.",
+      "input_tokens": 7,
+      "output_tokens": 7,
+      "total_tokens": 14
+    },
+    {
+      "input": {
+        "country": "Japan"
+      },
+      "output": "The capital of Japan is Tokyo.",
+      "input_tokens": 7,
+      "output_tokens": 7,
+      "total_tokens": 14
+    },
+    {
+      "input": {
+        "country": "Brazil"
+      },
+      "output": "The capital of Brazil is Bras\u00edlia.",
+      "input_tokens": 7,
+      "output_tokens": 8,
+      "total_tokens": 15
+    }
+  ]
+}
