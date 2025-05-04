@@ -1,0 +1,43 @@
+# MOXY Evaluation Results
+# Generated: 2025-05-04T00:10:48.852588
+
+eval_id: capital_test
+
+# Common configuration that will be referenced
+common: &common_config
+  model: gpt-4o-mini
+  timestamp: 2025-05-04T00:10:48
+  token_usage: 43
+  elapsed_s: 1.78
+
+prompt_template: What is the capital of {country}?
+
+# Results section with anchors to common configuration
+results:
+  - <<: *common_config  # Merge the common configuration
+    # Result 1
+    input: {"country": "France"}
+    output: |
+      The capital of France is Paris.
+    tokens:
+      input: 7
+      output: 7
+      total: 14
+  - <<: *common_config  # Merge the common configuration
+    # Result 2
+    input: {"country": "Japan"}
+    output: |
+      The capital of Japan is Tokyo.
+    tokens:
+      input: 7
+      output: 7
+      total: 14
+  - <<: *common_config  # Merge the common configuration
+    # Result 3
+    input: {"country": "Brazil"}
+    output: |
+      The capital of Brazil is Brasília.
+    tokens:
+      input: 7
+      output: 8
+      total: 15
