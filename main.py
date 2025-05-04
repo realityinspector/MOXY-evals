@@ -25,6 +25,10 @@ CONFIG_PATH  = ROOT / "config.yaml"
 console      = Console()
 enc          = tiktoken.get_encoding("cl100k_base")
 
+# Set YAML to use safe_dump with proper formatting - preserve multiline text
+yaml.Dumper.ignore_aliases = lambda *args : True  # Default behavior
+yaml.add_representer(str, lambda dumper, data: dumper.represent_scalar('tag:yaml.org,2002:str', data, style='|' if '\n' in data else None))
+
 # ─────────────────────────── API KEYS ────────────────────────────
 OPENAI_KEY = os.getenv("OPENAI_API_KEY")
 OXEN_TOKEN = os.getenv("OXEN_API_KEY")          # auth for hub / server
@@ -586,7 +590,60 @@ def _commit_paths(paths: list[Path], msg: str, branch: str) -> None:
     except Exception as e:
         console.print(f"[yellow]Error committing files: {e}[/yellow]")
 
+# ───────────────────────── YAML utils ───────────────────────────────
+def _mk_yaml(p: Dict[str, Any]) -> str:
+    """Generate YAML representation using anchors and comments."""
+    # Build the string with comments and anchors
+    yaml_str = [
+        f"# MOXY Evaluation Results",
+        f"# Generated: {datetime.utcnow().isoformat()}",
+        f"",
+        f"eval_id: {p['eval_id']}",
+        f"",
+        f"# Common configuration that will be referenced",
+        f"common: &common_config",
+        f"  model: {p['model']}",
+        f"  timestamp: {p['ts']}",
+        f"  token_usage: {p['token_usage']}",
+        f"  elapsed_s: {p['elapsed_s']}",
+        f"",
+        f"prompt_template: {p['prompt_template']}",
+        f"",
+        f"# Results section with anchors to common configuration",
+        f"results:"
+    ]
+
+    # Add the results, each referencing the common config
+    for i, r in enumerate(p["results"], 1):
+        yaml_str.extend([
+            f"  - <<: *common_config  # Merge the common configuration",
+            f"    # Result {i}",
+            f"    input: {json.dumps(r['input'])}",
+            f"    output: |",
+            f"      {r['output'].replace(chr(10), chr(10) + '      ')}",
+            f"    tokens:",
+            f"      input: {r['input_tokens']}",
+            f"      output: {r['output_tokens']}",
+            f"      total: {r['total_tokens']}"
+        ])
+
+    return "\n".join(yaml_str)
+
 # ───────────────────────── main eval  ───────────────────────────
+def _mk_markdown(p: Dict[str, Any]) -> str:
+    out = [f"# {p['eval_id']}\n",
+           f"*time*: {p['ts']}\n",
+           f"*model*: {p['model']}\n",
+           f"*tokens*: {p['token_usage']}\n",
+           f"*elapsed*: {p['elapsed_s']} s\n\n## Results\n"]
+    for i,r in enumerate(p["results"],1):
+        out += [f"### {i}\n",
+                f"`input`: `{json.dumps(r['input'])}`\n\n",
+                f"> {r['output']}\n\n",
+                (f"*tokens*: {r['input_tokens']}+{r['output_tokens']}"
+                 f"={r['total_tokens']}\n")]
+    return "\n".join(out)
+
 def run_first_eval() -> None:
     global OXEN_REMOTE  # Global declaration
 
@@ -623,11 +680,13 @@ def run_first_eval() -> None:
     stem = f"{datetime.utcnow():%Y%m%dT%H%M%SZ}_{uuid.uuid4().hex}"
     json_fp = out_dir / f"{stem}.json"
     md_fp   = out_dir / f"{stem}.md"
+    yaml_fp = out_dir / f"{stem}.yaml"  # Add YAML output file
 
     json_fp.write_text(json.dumps(payload, indent=2))
     md_fp.write_text(_mk_markdown(payload))
+    yaml_fp.write_text(_mk_yaml(payload))  # Write YAML output
 
-    console.print(f"[dim]logs → {json_fp.name} / {md_fp.name}[/dim]")
+    console.print(f"[dim]logs → {json_fp.name} / {md_fp.name} / {yaml_fp.name}[/dim]")
 
     # version‑control
     if OXEN_ENABLED:
@@ -670,8 +729,8 @@ def run_first_eval() -> None:
                 except Exception:
                     pass
 
-            # Commit and push the result files
-            _commit_paths([json_fp, md_fp], f"eval {eval_id}", eval_id)
+            # Commit and push the result files - now including YAML file
+            _commit_paths([json_fp, md_fp, yaml_fp], f"eval {eval_id}", eval_id)
 
             # Final try - direct CLI push
             if _have_ox_cli and OXEN_REMOTE:
@@ -726,20 +785,6 @@ def run_first_eval() -> None:
 
         except Exception as e:
             console.print(f"[yellow]Oxen error: {e}[/yellow]")
-
-def _mk_markdown(p: Dict[str, Any]) -> str:
-    out = [f"# {p['eval_id']}\n",
-           f"*time*: {p['ts']}\n",
-           f"*model*: {p['model']}\n",
-           f"*tokens*: {p['token_usage']}\n",
-           f"*elapsed*: {p['elapsed_s']} s\n\n## Results\n"]
-    for i,r in enumerate(p["results"],1):
-        out += [f"### {i}\n",
-                f"`input`: `{json.dumps(r['input'])}`\n\n",
-                f"> {r['output']}\n\n",
-                (f"*tokens*: {r['input_tokens']}+{r['output_tokens']}"
-                 f"={r['total_tokens']}\n")]
-    return "\n".join(out)
 
 # ───────────────────────── entrypoint ────────────────────────────
 if __name__ == "__main__":
